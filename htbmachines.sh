@@ -25,6 +25,7 @@ function Helppanel(){
   echo -e "\n${greenColour}\t[+]-i\t${endColour} ${purpleColour}<IP>: Buscara el nombre de la maquina basandose en la IP${endColour}"
   echo -e "\n${greenColour}\t[+]-d\t${endColour} ${purpleColour}<Dificultad>: Buscara por el nivel de dificultad de la maquina${endColour}"
   echo -e "\n${greenColour}\t[+]-o\t${endColour} ${purpleColour}<Sistema operativo>: Buscara el nombre de la maquina basandose en el sistema operativo${endColour}"
+  echo -e "\n${greenColour}\t[+]-s\t${endColour} ${purpleColour}<Skill>: Buscara el nombre de la maquina basandose en la skill${endColour}"
   echo -e "\n ${greenColour}\t[+]-y\t${endColour} ${purpleColour}<Nombre e la máquina>: Mostrar el enlace de la resolucion de la maquina${endColour}"
   echo -e "\n ${greenColour}\t[+]-h\t${endColour} ${purpleColour}Mostrara el panel de ayuda${endColour}"
 
@@ -61,7 +62,6 @@ function colorOS(){
 }
 
 
-
 function searchMachine(){
 machineName="$1"
 searchMachine_cheker=$(cat bundle.js | awk "/name: \"$machineName\"/,/resuelta:/" | sed 's/^ *//'| tr -d '",'':' | grep -vE "id|sku|resuelta")
@@ -71,7 +71,7 @@ searchMachine_cheker=$(cat bundle.js | awk "/name: \"$machineName\"/,/resuelta:/
       text=$(echo "$line" | awk '{print $NF}')
       title=$(echo "$line" | awk '{print $1}')
       if [[ "$title" == "dificultad" ]]; then
-        text=$(colors-dificulty "$text")
+        text=$(colors_dificulty "$text")
       fi
       echo -e "${yellowColour}[*]${endColour}${purpleColour} $title${endColour}${turquoiseColour} --> $text${endColour}"
       done
@@ -140,28 +140,13 @@ fi
 
 function searchDifficulty(){
 difficulty="$1"
+colors_dificulty "$difficulty"
 checker_dificulty="$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B 5 | grep name | awk 'NF{print $NF}' | tr -d '"'',' | column)"
 if [ "$checker_dificulty" ]; then
-  echo -e "\n${yellowColour}[+]${endColour}${purpleColour} Mostrando todas las maquinas de dificultad ${blueColour}$difficulty\n${endColour}${endColour}"
-  case $difficulty in
-        "Fácil")
-          echo -e "${greenColour}$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B 5 | grep name | awk 'NF{print $NF}' | tr -d '"'',' | column)${endColour}"
-            ;;
-        "Media")
-          echo -e "${yellowColour}$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B 5 | grep name | awk 'NF{print $NF}' | tr -d '"'',' | column)${endColour}"
-            ;;
-        "Difícil")
-            echo -e "${redColour}$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B 5 | grep name | awk 'NF{print $NF}' | tr -d '"'',' | column)${endColour}"
-            ;;
-        "Insane")
-            echo -e "${purpleColour}$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B 5 | grep name | awk 'NF{print $NF}' | tr -d '"'',' | column)${endColour}"
-            ;;
-        *)
-            echo -e "${grayColour}No existe esta dificultad${endColour}"
-            ;;
-    esac
+  echo -e "\n${yellowColour}[+]${endColour}${purpleColour} Mostrando todas las maquinas de dificultad ${difColor}$difficulty${endColour}${purpleColour}:\n${endColour}"
+  echo -e "${difColor}$checker_dificulty${endColour}"
   else 
-  echo -e "${yellowColour}[!]${endColour}${redColour} La dificultad introducida no existe ${endColour}${yellowColour}[!]${endColour}"
+  echo -e "\n${yellowColour}[!]${endColour}${redColour} La dificultad introducida no existe ${endColour}${yellowColour}[!]${endColour}"
 fi
 }
 
@@ -169,41 +154,53 @@ fi
 function searchOS(){
   os="$1"
   os_checker="$(cat bundle.js | grep "so: \"$os\"" -C5 | grep "name: " | awk 'NF{print $NF}' | tr -d '"'',' | column)"
+  colorOS "$os"  
   if [ "$os_checker" ]; then
-    case $os in
-      "Linux")
-        echo -e "${yellowColour}$os_checker${endColour}"
-        ;;
-      "Windows")
-        echo -e "${blueColour}$os_checker${endColour}"
-    esac
+    echo -e "\n${colorOS}$os_checker${endColour}"
     else
       echo -e "${yellowColour}[!]${endColour}${redColour} El sistema operativo que estas intentando buscar no existe ${endColour}${yellowColour}[!]${endColour}"
   fi
 
 }
 
-#Indicadores
-declare -i parameter=0
-trap ctrl_c INT
-
-declare -i parameter_os=0
-declare -i parameter_difficulty=0
-
-
-difficultyandOS(){
+function difficultyandOS(){
   os="$1"
   difficulty="$2"
+  colors_dificulty "$difficulty"
+  colorOS "$os"
   checker_os_difficulty="$(cat bundle.js | grep "so: \"$os\"" -C5 | grep "dificultad: \"$difficulty\"" -C5 | grep "name: " | awk 'NF{print $NF}' | tr -d '"'',' | column)"
   if [ "$checker_os_difficulty" ]; then
-    echo -e "${yellowColour}[+]${endColour}${purpleColour} Mostrando todas las maquinas${endColour} ${colorOS}$os${endColour} de dificultad ${difColor}$difficulty${endColour}${purpleColour}:${endColour}"
-    echo -e "${yellowColour}$checker_os_difficulty${endColour}"
+    echo -e "${yellowColour}[+]${endColour}${purpleColour} Mostrando todas las maquinas${endColour} ${colorOS}$os${endColour}${purpleColour} de dificultad${endColour} ${difColor}$difficulty${endColour}${purpleColour}:${endColour}\n"
+    echo -e "${greyColour}$checker_os_difficulty${endColour}"
   else
     echo -e "${yellowColour}[!]${endColour}${redColour} La dificultad o el sistema operativo no existen ${endColour}${yellowColour}[!]${endColour}"
   fi
 }
 
-while getopts "n:ui:y:d:o:h" arg; do
+
+function getSkill(){
+skill="$1"
+skillchecker="$(cat bundle.js | grep "skills: " -B 6| grep "$skill" -i -B 6| grep "name: " | awk 'NF{print $NF}' | tr -d '"'',' | column)"
+
+if [ "$skillchecker" ]; then
+  echo -e "\n${yellowColour}[+]${endColour}${purpleColour} Mostrando todas las maquinas que apliquen la skill ${redColour}$skill${endColour}${purpleColour}:${endColour}"
+  echo -e "${blueColour}$skillchecker${endColour}"
+
+else
+echo -e "${yellowColour}\n[!]${endColour}${redColour} La skill que estas buscando no existe ${endColour}${yellowColour}[!]${endColour}"
+fi
+
+
+
+}
+#Indicadores
+declare -i parameter=0
+trap ctrl_c INT
+declare -i parameter_os=0
+declare -i parameter_difficulty=0
+
+#GetOpts
+while getopts "n:ui:y:d:o:s:h" arg; do
   case $arg in
     n) machineName="$OPTARG"; let parameter+=1;;
     u) let parameter+=2;;
@@ -211,25 +208,28 @@ while getopts "n:ui:y:d:o:h" arg; do
     y) machineName="$OPTARG"; let parameter+=4;;
     d) difficulty="$OPTARG";let parameter_difficulty+=1; let parameter+=5;;
     o) os="$OPTARG"; let parameter_os+=1; let parameter+=6;;
+    s) skill="$OPTARG"; let parameter+=7;;
     h) Helppanel;;
   esac
 
 done
 
 if [ $parameter -eq 1 ]; then
-  searchMachine $machineName
+  searchMachine "$machineName"
   elif [ $parameter -eq 2 ]; then
     updateFiles
   elif [ $parameter -eq 3 ]; then
-    searchIP $ipAddress
+    searchIP "$ipAddress"
   elif [ $parameter -eq 4 ]; then 
-    youtubeTutos $machineName 
+    youtubeTutos "$machineName" 
   elif [ $parameter -eq 5 ]; then 
-    searchDifficulty $difficulty
+    searchDifficulty "$difficulty"
   elif [ $parameter -eq 6 ]; then
-    searchOS $os
+    searchOS "$os"
   elif [ $parameter_difficulty -eq 1 ] && [ $parameter_os -eq 1 ]; then
-    difficultyandOS $os $difficulty
+    difficultyandOS "$os" "$difficulty"
+  elif [ $parameter -eq 7 ]; then
+    getSkill "$skill"
   else
     Helppanel
 fi
