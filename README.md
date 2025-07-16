@@ -16,53 +16,53 @@
 
 ---
 
-## Uso
+# Uso de htbmachines-searcher.sh
 
 ```bash
 ./htbmachines-searcher.sh [opciones]
+```
+
+## Opciones disponibles
 
 | Opción | Parámetro                | Descripción                                                             |
-| ------ | ------------------------ | ----------------------------------------------------------------------- |
-| -n     | `<Nombre de la máquina>` | Buscar una máquina por su nombre                                        |
-| -i     | `<IP>`                   | Buscar el nombre de la máquina según la IP                              |
-| -d     | `<Dificultad>`           | Buscar máquinas por nivel de dificultad (Fácil, Media, Difícil, Insane) |
-| -o     | `<Sistema operativo>`    | Buscar máquinas por sistema operativo (Windows, Linux, etc.)            |
-| -s     | `<Skill>`                | Buscar máquinas por skill específica                                    |
-| -u     |                          | Actualizar los datos locales descargando la información más reciente    |
-| -y     | `<Nombre de la máquina>` | Mostrar el enlace del vídeo de resolución de la máquina                 |
-| -h     |                          | Mostrar el panel de ayuda                                               |
-
+|--------|--------------------------|-------------------------------------------------------------------------|
+| `-n`   | `<Nombre de la máquina>` | Buscar una máquina por su nombre                                        |
+| `-i`   | `<IP>`                   | Buscar el nombre de la máquina según la IP                              |
+| `-d`   | `<Dificultad>`           | Buscar máquinas por nivel de dificultad (Fácil, Media, Difícil, Insane) |
+| `-o`   | `<Sistema operativo>`    | Buscar máquinas por sistema operativo (Windows, Linux, etc.)            |
+| `-s`   | `<Skill>`                | Buscar máquinas por skill específica                                    |
+| `-u`   |                          | Actualizar los datos locales descargando la información más reciente    |
+| `-y`   | `<Nombre de la máquina>` | Mostrar el enlace del vídeo de resolución de la máquina                 |
+| `-h`   |                          | Mostrar el panel de ayuda                                               |
 
 ## Ejemplos
 
 - **Buscar información de la máquina `Legacy`:**
 
-~~~bash
+```bash
 ./htbmachines-searcher.sh -n Legacy
-~~~
+```
 
 - **Buscar máquina por IP:**
 
-~~~bash
+```bash
 ./htbmachines-searcher.sh -i 10.10.10.1
-~~~
+```
 
 - **Mostrar todas las máquinas de dificultad media:**
 
-~~~bash
+```bash
 ./htbmachines-searcher.sh -d Media
-~~~
+```
 
 - **Actualizar los datos locales:**
 
-~~~bash
+```bash
 ./htbmachines-searcher.sh -u
-~~~
+```
 
 - **Ver el vídeo de resolución para la máquina `Optimum`:**
 
-~~~bash
+```bash
 ./htbmachines-searcher.sh -y Optimum
-~~~
-
-
+```
