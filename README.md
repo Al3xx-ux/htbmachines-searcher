@@ -66,3 +66,7 @@
 ```bash
 ./htbmachines-searcher.sh -y Optimum
 ```
+-**Buscar máquinas de dificultad `Media` y sistema operativo `Linux`:**
+
+```bash
+./htbmachines-searcher.sh -d Media -o Linux
